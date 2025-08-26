@@ -15,7 +15,7 @@ repositories {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -52,7 +52,7 @@ dependencies {
 // アプリケーション設定
 application {
     mainModule = 'kotothing.voicevalidator'
-    mainClass = 'koto_thing.voiceover_validator.VoiceValidatorApp'
+    mainClass = 'koto_thing.voiceover_validator.VoiceoverValidationApp'
 }
 
 // テスト設定

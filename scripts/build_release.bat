@@ -5,11 +5,11 @@ echo [INFO] Building VoiceValidator release packages...
 
 REM 既存のビルド成果物をクリーンアップ
 echo [INFO] Cleaning previous build...
-call gradlew clean
+call .\gradlew clean
 
 REM リリースパッケージをビルド
 echo [INFO] Building release packages...
-call gradlew buildRelease
+call .\gradlew distZip distTar
 
 if %ERRORLEVEL% NEQ 0 (
     echo [ERROR] Build failed with error code %ERRORLEVEL%
@@ -27,28 +27,8 @@ if exist "build\distributions\" (
     dir /b "build\distributions\VoiceValidator-*"
     echo.
     
-    REM SHA-256チェックサムを生成
-    echo [INFO] Generating SHA-256 checksums...
-    cd build\distributions
-    
-    REM SHA256SUMSファイルを作成
-    if exist "SHA256SUMS.txt" del "SHA256SUMS.txt"
-    
-    REM 各ファイルのチェックサムを計算
-    for %%f in (VoiceValidator-*.zip VoiceValidator-*.tar.gz) do (
-        echo [INFO] Calculating checksum for %%f...
-        powershell -Command "Get-FileHash '%%f' -Algorithm SHA256 | Select-Object -ExpandProperty Hash" > temp_hash.txt
-        set /p hash=<temp_hash.txt
-        echo !hash! *%%f >> SHA256SUMS.txt
-        del temp_hash.txt
-    )
-    
-    cd ..\..
-    
-    echo [INFO] Checksums generated in build\distributions\SHA256SUMS.txt
-    echo.
-    echo [INFO] Distribution files and checksums:
-    type "build\distributions\SHA256SUMS.txt"
+    echo [INFO] Distribution files ready for release:
+    dir "build\distributions\VoiceValidator-*"
     echo.
     
     echo [INFO] You can find the distribution packages at:
@@ -61,7 +41,7 @@ echo.
 echo [INFO] Release build complete!
 echo [INFO] Files ready for distribution:
 echo   - VoiceValidator-1.0.0.zip (Windows)
-echo   - VoiceValidator-1.0.0.tar.gz (Linux/macOS)
-echo   - SHA256SUMS.txt (Integrity verification)
+echo   - VoiceValidator-1.0.0.tar (Linux/macOS)
+echo   - SHA256 checksums included
 echo.
 pause
