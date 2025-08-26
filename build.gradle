@@ -49,15 +49,10 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 }
 
-// アプリケーションのメインクラス設定
+// アプリケーション設定
 application {
     mainModule = 'kotothing.voicevalidator'
-    mainClass = 'koto_thing.voiceover_validator.VoiceoverValidationApp'
-    applicationDefaultJvmArgs = [
-        '--module-path', 'lib',
-        '--add-modules', 'javafx.controls,javafx.fxml',
-        '-Dfile.encoding=UTF-8'
-    ]
+    mainClass = 'koto_thing.voiceover_validator.VoiceValidatorApp'
 }
 
 // テスト設定
@@ -65,194 +60,42 @@ test {
     useJUnitPlatform()
 }
 
-// JavaFX runtime configuration
-run {
-    systemProperty 'file.encoding', 'UTF-8'
-}
-
-// 標準のjarは自モジュールのみを含む
-jar {
-    manifest {
-        attributes 'Main-Class': 'koto_thing.voiceover_validator.VoiceoverValidationApp'
-    }
-}
-
-// --- jpackage 用: 非モジュールJARとステージング ---
-// module-info.class を含まない plain JAR を追加生成
-tasks.register('jarPlain', Jar) {
-    archiveClassifier.set('plain')
-    from(sourceSets.main.output)
-    exclude('module-info.class', '**/module-info.class')
-    manifest {
-        attributes 'Main-Class': 'koto_thing.voiceover_validator.VoiceoverValidationApp'
-    }
-}
-
-// jpackage 入力用の lib ディレクトリを準備
-tasks.register('prepareJpackage', Copy) {
-    dependsOn('installDist', 'jarPlain')
-
-    def installLib = layout.buildDirectory.dir('install/VoiceValidator/lib')
-    def outLib = layout.buildDirectory.dir('jpackage/lib')
-    def modularJarName = tasks.named('jar', Jar).flatMap { it.archiveFileName }
-    def plainJarFile = tasks.named('jarPlain', Jar).flatMap { it.archiveFile }
-
-    from(installLib)
-    into(outLib)
-
-    // 実行時にモジュールJARを除外
-    doFirst {
-        exclude(modularJarName.get())
-    }
-
-    // plain JAR をモジュールJAR名にリネームして配置
-    from(plainJarFile) {
-        rename { String fn -> modularJarName.get() }
-    }
-
-    // Python実行スクリプトも同梱（lib直下に配置）
-    from(project.layout.projectDirectory) {
-        include 'RecognizeAndCompare.py'
-        into ''
-    }
-}
-
-// プロジェクトのバージョンを出力
-tasks.register('printVersion') {
-    doLast { println project.version }
-}
-
-// Gradleが使用しているJDKのjava.homeを出力（jpackage検出のフォールバック用）
-tasks.register('printJavaHome') {
-    doLast { println System.getProperty('java.home') }
-}
-
-// 配布用のZIPファイル作成タスク
-task createDistribution(type: Zip) {
-    archiveBaseName = 'VoiceValidator'
-    archiveVersion = project.version
-    destinationDirectory = file("$buildDir/distributions")
-
-    from(installDist) {
-        into 'VoiceValidator'
-    }
-
-    // Pythonスクリプトとその他のファイルを含める
-    from('RecognizeAndCompare.py') {
-        into 'VoiceValidator/lib'
-    }
-
-    from('requirements.txt') {
-        into 'VoiceValidator'
-    }
-
-    from('README.md') {
-        into 'VoiceValidator'
-    }
-
-    from('CHANGELOG.md') {
-        into 'VoiceValidator'
-    }
-
-    from('start_voice_validator.bat') {
-        into 'VoiceValidator'
-    }
-}
-
-// TAR形式の配布ファイル作成タスク
-task createTarDistribution(type: Tar) {
-    archiveBaseName = 'VoiceValidator'
-    archiveVersion = project.version
-    destinationDirectory = file("$buildDir/distributions")
-    compression = Compression.GZIP
-    archiveExtension = 'tar.gz'
-
-    from(installDist) {
-        into 'VoiceValidator'
-    }
-
-    // Pythonスクリプトとその他のファイルを含める
-    from('RecognizeAndCompare.py') {
-        into 'VoiceValidator/lib'
-    }
-
-    from('requirements.txt') {
-        into 'VoiceValidator'
-    }
-
-    from('README.md') {
-        into 'VoiceValidator'
-    }
-
-    from('CHANGELOG.md') {
-        into 'VoiceValidator'
-    }
-
-    from('start_voice_validator.bat') {
-        into 'VoiceValidator'
-    }
-}
-
-// 配布ファイルに追加ファイルを含める
+// 配布設定
 distributions {
     main {
+        distributionBaseName = 'VoiceValidator'
         contents {
-            from('.') {
-                include 'start_voice_validator.bat'
-                include 'README.md'
-                include 'CHANGELOG.md'
-                include 'requirements.txt'
-            }
+            from('README.md')
+            from('CHANGELOG.md')
+            from('requirements.txt')
+            from('start_voice_validator.bat')
         }
     }
-}
-
-// 依存関係の設定
-createDistribution.dependsOn installDist
-createTarDistribution.dependsOn installDist
-
-// 簡単にビルドできるタスク
-task buildRelease {
-    dependsOn createDistribution, createTarDistribution
-    group = 'distribution'
-    description = 'Creates both ZIP and TAR.GZ distribution packages'
 }
 
 // チェックサム生成タスク
 task generateChecksums {
-    dependsOn buildRelease
-    group = 'distribution'
-    description = 'Generates SHA-256 checksums for distribution packages'
-    
+    dependsOn distTar, distZip
     doLast {
-        def distDir = file("$buildDir/distributions")
-        def checksumFile = new File(distDir, "SHA256SUMS.txt")
-        
-        if (checksumFile.exists()) {
-            checksumFile.delete()
-        }
-        
-        distDir.listFiles().findAll { 
-            it.name.startsWith('VoiceValidator-') && (it.name.endsWith('.zip') || it.name.endsWith('.tar.gz'))
-        }.each { file ->
-            println "[INFO] Calculating checksum for ${file.name}..."
-            
-            def hash = java.security.MessageDigest.getInstance("SHA-256")
-            file.eachByte(4096) { bytes, size ->
-                hash.update(bytes, 0, size)
+        def distributionsDir = file("$buildDir/distributions")
+        distributionsDir.listFiles().each { file ->
+            if (file.isFile() && (file.name.endsWith('.tar') || file.name.endsWith('.zip'))) {
+                def checksumFile = new File(distributionsDir, "${file.name}.sha256")
+                def hash = java.security.MessageDigest.getInstance("SHA-256")
+                file.withInputStream { stream ->
+                    byte[] buffer = new byte[8192]
+                    int bytesRead
+                    while ((bytesRead = stream.read(buffer)) != -1) {
+                        hash.update(buffer, 0, bytesRead)
+                    }
+                }
+                def hashString = hash.digest().collect { String.format('%02x', it) }.join('')
+                checksumFile.text = "${hashString}  ${file.name}\n"
+                println "Generated checksum for ${file.name}: ${hashString}"
             }
-            
-            def hashString = hash.digest().collect { 
-                String.format('%02x', it) 
-            }.join('')
-            
-            checksumFile.append("${hashString.toUpperCase()} *${file.name}\n")
-        }
-        
-        println "[INFO] Checksums generated in ${checksumFile.absolutePath}"
-        println "[INFO] Checksum contents:"
-        checksumFile.eachLine { line ->
-            println "  ${line}"
         }
     }
 }
+
+// ビルド時に自動的にチェックサムを生成
+assemble.finalizedBy generateChecksums
