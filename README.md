@@ -91,7 +91,7 @@ python RecognizeAndCompare.py sphinx en-US none test_input.json
 ---
 
 ## リリース手順（Windows）
-1) バージョンを確認（build.gradle の version）。現在: 1.0.0。
+1) バージョンを確認（build.gradle の version）
 2) 配布物の作成とハッシュ生成:
    - scripts/release.bat を実行すると ZIP/TAR を作成し、SHA-256 のチェックサムを出力します。
 3) 成果物の場所:
@@ -101,12 +101,3 @@ python RecognizeAndCompare.py sphinx en-US none test_input.json
 4) 起動確認:
    - ZIP を展開 → bin/VoiceValidator.bat で GUI を起動
    - start_voice_validator.bat でも起動可（FFmpeg と Python venv をセットしてから gradle run）
-
-## 既知の変更点（1.0.0）
-- ダークモードのテーブルヘッダー縦線の色を #404040 に統一
-- ComboBox/Tab の日本語フォント優先指定（Yu Gothic UI / Meiryo / Noto Sans JP）で文字化け防止
-- filler 背景と列リサイズガイド線もグリッド色に合わせて調整
-
-## 署名・配布の注意
-- 必要に応じてコード署名を実施（任意）
-- Git タグ例: v1.0.0（GitHub Release に ZIP/TAR と SHA256SUMS を添付）
