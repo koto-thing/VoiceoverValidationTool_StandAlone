@@ -1,0 +1,6 @@
+[2025-08-24 02:01:17.293389] === Starting SpeechRecognition Test ===
+[2025-08-24 02:01:17.363435] ✓ SpeechRecognition imported successfully
+[2025-08-24 02:01:17.363614] Testing recognition on: test_data/audio/test_beep.wav
+[2025-08-24 02:01:17.363870] ✓ Audio file loaded successfully
+[2025-08-24 02:01:17.810976] Google could not understand the audio
+[2025-08-24 02:01:17.811232] === SpeechRecognition Test completed ===

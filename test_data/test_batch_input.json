@@ -1,0 +1,30 @@
+﻿{
+  "tasks": [
+    {
+      "id": "001",
+      "audioPath": "test_data/audio/test_001.wav",
+      "scriptText": "こんにちは、これはテストです"
+    },
+    {
+      "id": "002", 
+      "audioPath": "test_data/audio/test_002.wav",
+      "scriptText": "今日は良い天気ですね"
+    },
+    {
+      "id": "003",
+      "audioPath": "test_data/audio/test_003.wav", 
+      "scriptText": "音声認識のテストを行います"
+    },
+    {
+      "id": "004",
+      "audioPath": "test_data/audio/test_004.wav",
+      "scriptText": "複雑な文章での認識精度を確認しています"
+    },
+    {
+      "id": "005",
+      "audioPath": "test_data/audio/test_005.wav",
+      "scriptText": "数字の123と456を正確に認識できるでしょうか"
+    }
+  ]
+}
+

@@ -1,0 +1,638 @@
+﻿/* Modern JavaFX Styling - Material Design Inspired */
+
+/* Root styles */
+.root {
+    -fx-background-color: #f4f7f9; /* Lighter grey background */
+    /* グローバルのフォント指定はFontIconのフォントを上書きし得るため削除 */
+    /* 各コンポーネントごとにフォントを指定します */
+    -fx-font-size: 14px;
+}
+
+/* 一般的なUI要素にフォントを適用（FontIconは除外） */
+.label, .button, .text-field, .combo-box, .table-view, .tab, .progress-bar, .status-bar {
+    -fx-font-family: "Yu Gothic UI", "Meiryo", "Noto Sans JP", "Noto Sans CJK JP", "Segoe UI", "Roboto", sans-serif;
+}
+
+/* Card styles */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px; /* Softer corners */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+    -fx-padding: 25px;
+    -fx-spacing: 18px;
+    -fx-border-width: 1px;
+    -fx-border-color: #e0e0e0;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 6);
+    -fx-border-color: #2196F3;
+}
+
+.card.no-hover:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+    -fx-border-color: #e0e0e0;
+}
+
+.card-header {
+    -fx-font-size: 20px; /* Larger header font */
+    -fx-font-weight: bold;
+    -fx-text-fill: #212121;
+    -fx-padding: 0 0 15px 0;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: #2196F3;
+}
+
+/* Button styles */
+.button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-padding: 12 22 12 22;
+    -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.2), 5, 0, 0, 2);
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: #1976D2;
+    -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.4), 8, 0, 0, 3);
+}
+
+.button:pressed {
+    -fx-background-color: #0D47A1;
+    -fx-effect: none;
+}
+
+.button-primary {
+    -fx-background-color: #4CAF50;
+}
+
+.button-primary:hover {
+    -fx-background-color: #388E3C;
+}
+
+.button-secondary {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #424242;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.button-danger {
+    -fx-background-color: #F44336;
+}
+
+.button-danger:hover {
+    -fx-background-color: #D32F2F;
+}
+
+/* Text field styles */
+.text-field {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #a0a0a0;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.text-field:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+}
+
+/* ComboBox styles */
+.combo-box {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.combo-box:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #2196F3;
+    -fx-background-radius: 0 8px 8px 0;
+}
+
+.combo-box .arrow {
+    -fx-background-color: white;
+}
+
+/* Label styles */
+.label {
+    -fx-text-fill: #424242;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500; /* Slightly bolder */
+}
+
+.label-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212121;
+}
+
+.label-subtitle {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #424242;
+}
+
+/* TableView styles */
+.table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-border-color: #e0e0e0;
+    -fx-effect: none;
+    
+    /* 選択色と文字色（ライトテーマ）*/
+    -fx-selection-bar: #E3F2FD;
+    -fx-selection-bar-text: #212121;         /* selection text */
+    -fx-table-cell-border-color: #e0e0e0;    /* 列間の縦線 */
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #fafafa, #f0f0f0);
+    -fx-background-radius: 12px 12px 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: #212121;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 16px 12px 16px 12px; /* ヘッダーの高さ少し拡大 */
+    -fx-border-color: transparent #e0e0e0 transparent transparent; /* 列間の縦線 */
+    -fx-border-width: 0 1px 0 0 !important; /* ライトモードでも1pxに固定 */
+    -fx-border-style: solid !important;
+}
+
+.table-view .table-cell {
+    -fx-padding: 14px 12px; /* セル内余白を拡大 */
+    -fx-border-color: transparent #e0e0e0 #f0f0f0 transparent; /* 右と下に境界線 */
+    -fx-font-size: 15px; /* 若干大きめに */
+    -fx-background-color: #f4f7f9; /* ライトモード背景色に合わせる */
+    -fx-text-fill: #212121 !important; /* ライトモードでは黒文字 */
+}
+
+/* 行の高さは可変とし、CSSで固定しない（折り返し対応） */
+.table-row-cell {
+    -fx-background-color: #f4f7f9; /* ライトモード背景色に合わせる */
+    -fx-transition: background-color 0.2s;
+}
+
+/* 選択行の文字色を強制（ライトテーマ）*/
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #212121 !important;
+    -fx-background-color: #E3F2FD;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #E3F2FD;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e8ebef; /* やや濃いライト背景 */
+}
+
+.table-row-cell:hover .table-cell {
+    -fx-background-color: #e8ebef;
+    -fx-text-fill: #212121 !important;
+}
+
+/* Table filler/empty rows fix */
+/* Light theme: match table bg */
+.table-view .filler,
+.table-view .column-header-background .filler {
+    -fx-background-color: white;
+}
+
+/* Dark theme: match dark bg so white gaps disappear */
+.dark-mode .table-view .filler {
+    -fx-background-color: #1E1E1E !important; /* 白いすき間を確実に消す */
+}
+.dark-mode .table-view .column-header-background .filler {
+    -fx-background-color: #1E1E1E !important; /* ヘッダー右端の白帯対策 */
+}
+.dark-mode .table-row-cell:empty {
+    -fx-background-color: #1E1E1E;
+}
+.dark-mode .table-row-cell:empty .table-cell {
+    -fx-background-color: transparent;
+}
+
+/* ScrollPane styles */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12px;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #c0c0c0;
+    -fx-background-radius: 8px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #a0a0a0;
+}
+
+/* Progress indicator styles */
+.progress-indicator {
+    -fx-progress-color: #2196F3;
+}
+
+.progress-bar {
+    -fx-accent: #2196F3;
+    -fx-background-radius: 8px;
+}
+
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(to right, #42A5F5, #2196F3);
+    -fx-background-insets: 1;
+    -fx-background-radius: 7px;
+    -fx-padding: 2px;
+}
+
+/* Tab pane styles */
+.tab-pane {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 10px 0;
+}
+
+.tab {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+    -fx-text-fill: #757575;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 20px 12px 20px;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.tab:selected {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+}
+
+.tab:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+/* Status bar styles */
+.status-bar {
+    -fx-background-color: #263238;
+    -fx-text-fill: white;
+    -fx-padding: 12px 20px;
+    -fx-border-width: 1px 0 0 0;
+    -fx-border-color: #37474F;
+}
+
+.status-bar .toggle-button {
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+}
+
+.status-bar .toggle-button:hover {
+    -fx-background-color: rgba(255,255,255,0.18);
+}
+
+.status-bar .toggle-button .ikonli-font-icon {
+    -fx-fill: white;
+}
+
+/* Icon styles */
+.ikonli-font-icon {
+    -fx-fill: #616161;
+    -fx-font-size: 1.2em;
+    /* FontIconは自身のフォントを設定するため、ここでfont-familyを指定しない */
+}
+
+.button .ikonli-font-icon {
+    -fx-fill: white;
+}
+
+.button-secondary .ikonli-font-icon {
+    -fx-fill: #424242;
+}
+
+.card-header .ikonli-font-icon {
+    -fx-fill: #2196F3;
+    -fx-font-size: 1.4em;
+}
+
+.status-bar .ikonli-font-icon {
+    -fx-fill: white;
+}
+
+/* CSV ID マッピング用: クリック可能に見えるスタイル */
+.mapping-combo {
+    -fx-cursor: hand;
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 2px 6px;
+}
+.mapping-combo:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #bdbdbd;
+}
+.mapping-combo:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+}
+
+.dark-mode .mapping-combo {
+    -fx-background-color: #2D2D2D;
+    -fx-border-color: #404040;
+}
+.dark-mode .mapping-combo:hover {
+    -fx-background-color: #333333;
+    -fx-border-color: #606060;
+}
+.dark-mode .mapping-combo:focused {
+    -fx-border-color: #64B5F6;
+    -fx-background-color: #1E1E1E;
+}
+
+/* ComboBox の矢印ボタンも見やすく */
+.mapping-combo .arrow-button {
+    -fx-background-color: #2196F3;
+    -fx-background-radius: 0 6px 6px 0;
+}
+.mapping-combo .arrow {
+    -fx-background-color: white;
+}
+.dark-mode .mapping-combo .arrow-button {
+    -fx-background-color: #3E5360;
+}
+.dark-mode .mapping-combo .arrow {
+    -fx-background-color: #FFFFFF;
+}
+
+/* Dark mode styles */
+.root.dark-mode {
+    -fx-background-color: #121212;
+}
+
+.dark-mode .card {
+    -fx-background-color: #1E1E1E;
+}
+
+.dark-mode .label {
+    -fx-text-fill: #E0E0E0;
+}
+
+.dark-mode .label-title {
+    -fx-text-fill: #FFFFFF;
+}
+
+.dark-mode .text-field {
+    -fx-background-color: #2D2D2D;
+    -fx-text-fill: #E0E0E0;
+    -fx-border-color: #404040;
+}
+
+/* ダークモー��時のテーブル背景とスタイル */
+.dark-mode .table-view {
+    -fx-background-color: #1E1E1E !important;
+    -fx-border-color: #404040;
+    -fx-selection-bar: #3E5360;
+    -fx-selection-bar-text: #FFFFFF;
+    -fx-table-cell-border-color: #404040;
+    -fx-control-inner-background: #1E1E1E;
+}
+
+.dark-mode .table-view .column-header-background {
+    -fx-background-color: #1E1E1E !important;
+}
+
+.dark-mode .table-view .column-header,
+.dark-mode .table-view .nested-column-header {
+    -fx-background-color: #1E1E1E !important;
+    -fx-text-fill: #FFFFFF !important;
+    /* 二重線防止のため既存ボーダー無効化 */
+    -fx-border-color: transparent !important;
+    -fx-border-width: 0 !important;
+    -fx-border-style: none !important;
+    -fx-border-insets: 0 !important;
+    /* 背景の余計なレイヤーを排除 */
+    -fx-background-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+}
+
+/* 右側ボーダーは leaf ヘッダー（column-header）のみに 1px で適用 */
+.dark-mode .table-view .column-header {
+    /* 太い縦線の原因となる重複やグローを避けるため、ヘッダーの縦線は描画しない */
+    -fx-border-color: transparent !important;
+    -fx-border-width: 0 !important;
+    -fx-border-style: none !important;
+}
+
+.dark-mode .table-view .nested-column-header {
+    -fx-border-color: transparent !important;
+    -fx-border-width: 0 !important;
+    -fx-border-style: none !important;
+}
+
+.dark-mode .table-view .table-cell {
+    -fx-text-fill: #FFFFFF !important;
+    -fx-background-color: #121212 !important;
+    -fx-border-color: transparent #404040 #404040 transparent !important;
+    -fx-border-width: 0px 1px 1px 0px !important; /* 境界線を確実に1pxに */
+    -fx-border-style: solid !important;
+}
+
+.dark-mode .table-row-cell {
+    -fx-background-color: #121212 !important;
+}
+
+.dark-mode .table-row-cell:selected {
+    -fx-background-color: #3E5360 !important;
+}
+
+.dark-mode .table-row-cell:selected .table-cell {
+    -fx-text-fill: #FFFFFF !important;
+    -fx-background-color: #3E5360 !important;
+}
+
+.dark-mode .table-row-cell:hover {
+    -fx-background-color: #1A1A1A !important;
+}
+
+.dark-mode .table-row-cell:hover .table-cell {
+    -fx-background-color: #1A1A1A !important;
+    -fx-text-fill: #FFFFFF !important;
+}
+
+/* ダークモード時のテーブル内テキストを確実に白色にする最強セレクタ */
+.dark-mode .table-view .table-cell .text,
+.dark-mode .table-view .table-cell .label,
+.dark-mode .table-view .table-cell .labeled,
+.dark-mode .table-view .indexed-cell,
+.dark-mode .table-view .indexed-cell .text,
+.dark-mode .table-view .indexed-cell .label,
+.dark-mode .table-view .table-row-cell .table-cell,
+.dark-mode .table-view .table-row-cell .table-cell .text,
+.dark-mode .table-view .table-row-cell .table-cell .label,
+.dark-mode .table-view .table-row-cell .table-cell .labeled,
+.dark-mode .table-view .virtual-flow .clipped-container .sheet .table-row-cell .table-cell,
+.dark-mode .table-view .virtual-flow .clipped-container .sheet .table-row-cell .table-cell .text,
+.dark-mode .table-view .virtual-flow .clipped-container .sheet .table-row-cell .table-cell .label,
+.dark-mode .table-view .virtual-flow .clipped-container .sheet .table-row-cell .table-cell .labeled {
+    -fx-text-fill: #FFFFFF !important;
+    -fx-fill: #FFFFFF !important;
+}
+
+/* ダークモード時のテーブル内のすべての要素を白色に強制 */
+.dark-mode .table-view * {
+    -fx-text-fill: #FFFFFF !important;
+    -fx-fill: #FFFFFF !important;
+}
+
+/* ComboBoxのテキストを確実に黒色にする - より具体的なセレクタ */
+.dark-mode .table-view .combo-box,
+.dark-mode .table-view .combo-box *,
+.dark-mode .mapping-combo,
+.dark-mode .mapping-combo * {
+    -fx-text-fill: #212121 !important;
+}
+
+.dark-mode .table-view .combo-box .list-cell,
+.dark-mode .mapping-combo .list-cell {
+    -fx-text-fill: #212121 !important;
+    -fx-background-color: #FFFFFF !important;
+}
+
+/* ComboBoxの表示テキスト部分を確実に黒色に */
+.dark-mode .table-view .combo-box .text,
+.dark-mode .table-view .combo-box .label,
+.dark-mode .mapping-combo .text,
+.dark-mode .mapping-combo .label {
+    -fx-fill: #212121 !important;
+    -fx-text-fill: #212121 !important;
+}
+
+/* プルダウンが開いた時のリスト項目 */
+.dark-mode .combo-box-popup .list-view .list-cell {
+    -fx-text-fill: #212121 !important;
+    -fx-background-color: #FFFFFF !important;
+}
+
+/* ダークモード時のComboBoxテキストを確実に黒色に - 最優先セレクタ */
+.dark-mode .table-view .combo-box {
+    -fx-text-fill: #000000 !important;
+    -fx-background-color: #FFFFFF !important;
+}
+
+.dark-mode .table-view .combo-box .list-cell {
+    -fx-text-fill: #000000 !important;
+    -fx-background-color: #FFFFFF !important;
+}
+
+.dark-mode .mapping-combo {
+    -fx-text-fill: #000000 !important;
+    -fx-background-color: #FFFFFF !important;
+}
+
+.dark-mode .mapping-combo .list-cell {
+    -fx-text-fill: #000000 !important;
+    -fx-background-color: #FFFFFF !important;
+}
+
+/* ComboBoxの内部テキスト要素を確実に黒色に */
+.dark-mode .table-view .combo-box .text,
+.dark-mode .table-view .combo-box .label,
+.dark-mode .mapping-combo .text,
+.dark-mode .mapping-combo .label {
+    -fx-fill: #000000 !important;
+    -fx-text-fill: #000000 !important;
+}
+
+/* プルダウ��リストのポップアップも黒文字に */
+.dark-mode .combo-box-popup .list-view .list-cell {
+    -fx-text-fill: #000000 !important;
+    -fx-background-color: #FFFFFF !important;
+}
+
+/* ダークモード時のテーブル全体の最終調整 - ComboBox以外は白文字 */
+/* JavaFX CSS は :not() に未対応のため、このブロックは削除し、
+   白指定は上位の強制白セレクタで、黒指定は ComboBox 系の詳細セレクタで維持する */
+
+/* === App Header Styles === */
+.app-header {
+    -fx-background-color: #2196F3 !important; /* ライトモードでのヘッダー色 */
+    -fx-background-radius: 0;
+    -fx-padding: 20px 30px;
+    -fx-transition: background-color 0.3s ease-in-out;
+}
+
+/* ダークモードでのヘッダー */
+.dark-mode .app-header {
+    -fx-background-color: #1976D2 !important; /* ダークモードでのヘッダー色 */
+}
+
+/* ヘッダーのホバー効果を無効化 */
+.app-header:hover {
+    -fx-background-color: #2196F3 !important; /* ライトモードでホバー時も同じ色 */
+}
+
+.dark-mode .app-header:hover {
+    -fx-background-color: #1976D2 !important; /* ダークモードでホバー時も同じ色 */
+}
+
+/* ヘッダー内のラベルスタイル */
+.app-header .label {
+    -fx-text-fill: white !important;
+}
+
+/* ヘッダー内のアイコンスタイル */
+.app-header .ikonli-font-icon {
+    -fx-fill: white !important;
+}
+
+/* === Final overrides === */
+/* ダークモードのヘッダー縦線色をグリッドと同じ #404040 に統一 */
+.dark-mode .table-view .column-header,
+.dark-mode .table-view .nested-column-header {
+    -fx-border-color: transparent #404040 transparent transparent !important;
+    -fx-border-width: 0 1px 0 0 !important;
+    -fx-border-style: solid !important;
+}
+/* 日本語フォントをプルダウン（未選択表示/ポップアップ）とタブに強制 */
+.combo-box,
+.combo-box .list-cell,
+.combo-box-popup .list-view .list-cell,
+.tab,
+.tab .label {
+    -fx-font-family: "Yu Gothic UI", "Meiryo", "Noto Sans JP", "Noto Sans CJK JP", "Segoe UI", "Roboto", sans-serif;
+}

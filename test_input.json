@@ -1,0 +1,10 @@
+﻿{
+  "tasks": [
+    {
+      "id": "test001",
+      "audioPath": "test_audio.wav",
+      "scriptText": "こんにちは、これはテストです。"
+    }
+  ]
+}
+

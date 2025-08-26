@@ -1,0 +1,9 @@
+﻿{
+  "tasks": [
+    {
+      "id": "test_beep",
+      "audioPath": "test_data/audio/test_beep.wav",
+      "scriptText": "これはテストです"
+    }
+  ]
+}

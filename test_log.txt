@@ -1,0 +1,16 @@
+[2025-08-23 21:46:23.075207] === Starting Python Environment Test ===
+[2025-08-23 21:46:23.075207] Python version: 3.12.2 (tags/v3.12.2:6abddd9, Feb  6 2024, 21:26:36) [MSC v.1937 64 bit (AMD64)]
+[2025-08-23 21:46:23.075207] Current working directory: D:\Pandd\VoiceValidationTool\VoiceValidator
+[2025-08-23 21:46:23.150541] ✓ SpeechRecognition imported successfully
+[2025-08-23 21:46:24.362407] ✓ Whisper imported successfully
+[2025-08-23 21:46:24.362407] ✓ File exists: simple_test.json
+[2025-08-23 21:46:24.362407] ✓ File exists: test_data/audio/test_silence.wav
+[2025-08-23 21:46:24.362407] ✓ File exists: RecognizeAndCompare.py
+[2025-08-23 21:46:24.362907] ✓ JSON loaded successfully: {"tasks": [{"id": "test_silence", "audioPath": "test_data/audio/test_silence.wav", "scriptText": ""}]}
+[2025-08-23 21:46:24.364407] Loading Whisper tiny model...
+[2025-08-23 21:46:24.622179] ✓ Whisper tiny model loaded successfully
+[2025-08-23 21:46:24.622179] Audio file path: test_data/audio/test_silence.wav
+[2025-08-23 21:46:24.622679] Absolute audio file path: D:\Pandd\VoiceValidationTool\VoiceValidator\test_data\audio\test_silence.wav
+[2025-08-23 21:46:24.622679] Testing recognition on: D:\Pandd\VoiceValidationTool\VoiceValidator\test_data\audio\test_silence.wav
+[2025-08-23 21:46:24.634192] Transcription error: [WinError 2] 指定されたファイルが見つかりません。
+[2025-08-23 21:46:24.634192] === Test completed ===

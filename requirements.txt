@@ -1,0 +1,13 @@
+﻿# 音声認識ライブラリ
+SpeechRecognition>=3.10.0
+openai-whisper
+pocketsphinx
+
+# 音声ファイル処理
+pydub>=0.25.1
+
+# その他の依存関係
+numpy
+scipy
+torch
+torchaudio

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="koto_thing.voiceover_validator.MainViewController">
+   <top>
+      <!-- ヘッダー -->
+      <VBox styleClass="app-header">
+         <padding>
+            <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+         </padding>
+         <Label fx:id="titleLabel" text="Voice Validation Tool" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;">
+            <font>
+               <Font name="System Bold" size="28.0" />
+            </font>
+         </Label>
+         <Label text="音声ファイルと台本の照合ツール" style="-fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.8);" />
+      </VBox>
+   </top>
+   
+   <center>
+      <ScrollPane fx:id="mainScroll" fitToWidth="true" style="-fx-background-color: transparent;">
+         <content>
+            <VBox spacing="20.0">
+               <padding>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </padding>
+               
+               <!-- セッティングカード -->
+               <VBox styleClass="card no-hover" spacing="15.0">
+                  <Label styleClass="card-header" text="設定">
+                     <graphic>
+                        <FontIcon iconLiteral="fas-cog" />
+                     </graphic>
+                  </Label>
+                  
+                  <GridPane hgap="15.0" vgap="15.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="120.0" prefWidth="120.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="250.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="80.0" prefWidth="80.0" />
+                     </columnConstraints>
+                     
+                     <!-- Pythonのパス -->
+                     <Label text="Python パス:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                     <TextField fx:id="pythonPathField" promptText="Python実行ファイルのパス" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                     <Button fx:id="browsePythonButton" onAction="#browsePythonPath" styleClass="button-secondary" text="参照" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <graphic>
+                           <FontIcon iconLiteral="fas-search" />
+                        </graphic>
+                     </Button>
+                     
+                     <!-- 音声認識エンジン -->
+                     <Label text="音声認識エンジン:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                     <ComboBox fx:id="engineComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     
+                     <!-- 言語コード -->
+                     <Label text="言語コード:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                     <TextField fx:id="languageCodeField" promptText="ja-JP" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     
+                     <!-- Whisperのモデル(Whisperが選択された時のみ表示する) -->
+                     <Label fx:id="whisperModelLabel" text="Whisperモデル:" GridPane.columnIndex="0" GridPane.rowIndex="3" visible="false" />
+                     <ComboBox fx:id="whisperModelComboBox" maxWidth="1.7976931348623157E308" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                     <!-- 環境チェックボタン -->
+                     <Button text="環境チェック" onAction="#checkEnvironment" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  </GridPane>
+               </VBox>
+               
+               <!-- 入力フィールドのカード -->
+               <VBox styleClass="card no-hover" spacing="15.0">
+                  <Label styleClass="card-header" text="入力ファイル">
+                     <graphic>
+                        <FontIcon iconLiteral="fas-folder-open" />
+                     </graphic>
+                  </Label>
+                  
+                  <GridPane hgap="15.0" vgap="15.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="120.0" prefWidth="120.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="250.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="80.0" prefWidth="80.0" />
+                     </columnConstraints>
+                     
+                     <!-- CSVファイル -->
+                     <Label text="台本CSV:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                     <TextField fx:id="scriptPathField" promptText="CSVファイルを選択" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                     <Button fx:id="browseScriptButton" onAction="#browseScriptFile" styleClass="button-secondary" text="参照" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <graphic>
+                           <FontIcon iconLiteral="fas-file-alt" />
+                        </graphic>
+                     </Button>
+                     
+                     <!-- 音声フォルダ -->
+                     <Label text="音声フォルダ:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                     <TextField fx:id="audioFolderPathField" promptText="音声ファイルフォルダを選択" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     <Button fx:id="browseAudioButton" onAction="#browseAudioFolder" styleClass="button-secondary" text="参照" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <graphic>
+                           <FontIcon iconLiteral="fas-folder-open" />
+                        </graphic>
+                     </Button>
+                     
+                     <!-- 列名 -->
+                     <Label text="比較列名:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                     <TextField fx:id="columnNameField" promptText="context" text="context" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  </GridPane>
+               </VBox>
+               
+               <!-- CSVプレビューカード -->
+               <VBox fx:id="csvPreviewCard" styleClass="card no-hover" spacing="15.0" visible="false">
+                  <Label styleClass="card-header" text="CSV プレビュー">
+                     <graphic>
+                        <FontIcon iconLiteral="fas-table" />
+                     </graphic>
+                  </Label>
+                  <TableView fx:id="csvPreviewTable" />
+               </VBox>
+               
+               <!-- 音声マッピングカード -->
+               <VBox fx:id="audioMappingCard" styleClass="card no-hover" spacing="15.0" visible="false">
+                  <Label styleClass="card-header" text="音声ファイルマッピング">
+                     <graphic>
+                        <FontIcon iconLiteral="fas-link" />
+                     </graphic>
+                  </Label>
+                  <Label text="音声ファイルとCSVのIDを対応付けてください" style="-fx-text-fill: #757575;" />
+                  <TableView fx:id="audioMappingTable">
+                     <columns>
+                        <TableColumn fx:id="fileNameColumn" prefWidth="300.0" text="ファイル名" />
+                        <TableColumn fx:id="csvIdColumn" prefWidth="200.0" text="CSV ID" />
+                     </columns>
+                  </TableView>
+               </VBox>
+               
+               <!-- アクションボタン -->
+               <HBox alignment="CENTER" spacing="20.0">
+                  <Button fx:id="validateButton" onAction="#startValidation" styleClass="button-primary" text="検証開始">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <FontIcon iconLiteral="fas-play-circle" />
+                     </graphic>
+                  </Button>
+                  <Button fx:id="clearResultsButton" onAction="#clearResults" text="結果をクリア">
+                     <graphic>
+                        <FontIcon iconLiteral="fas-trash" />
+                     </graphic>
+                  </Button>
+               </HBox>
+               
+               <!-- 検証結果カード -->
+               <VBox fx:id="resultsCard" styleClass="card no-hover" spacing="15.0" visible="false">
+                  <Label styleClass="card-header" text="検証結果">
+                     <graphic>
+                        <FontIcon iconLiteral="fas-clipboard-check" />
+                     </graphic>
+                  </Label>
+                  
+                  <!-- 進捗バー -->
+                  <VBox fx:id="progressContainer" spacing="10.0" visible="false">
+                     <Label fx:id="progressLabel" text="処理中..." />
+                     <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" />
+                  </VBox>
+                  
+                  <!-- 検証結果のテーブル -->
+                  <TableView fx:id="resultTable">
+                     <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="80.0" text="ID" />
+                        <TableColumn fx:id="similarityColumn" prefWidth="100.0" text="類似度" />
+                        <TableColumn fx:id="scriptColumn" prefWidth="300.0" text="台本" />
+                        <TableColumn fx:id="recognizedColumn" prefWidth="300.0" text="認識結果" />
+                        <TableColumn fx:id="statusColumn" prefWidth="100.0" text="ステータス" />
+                     </columns>
+                  </TableView>
+                  
+                  <!-- 結果をエクスポートするボタン -->
+                  <HBox alignment="CENTER_RIGHT">
+                     <Button fx:id="exportResultsButton" onAction="#exportResults" text="結果をエクスポート">
+                        <graphic>
+                           <FontIcon iconLiteral="fas-share-square" />
+                        </graphic>
+                     </Button>
+                  </HBox>
+               </VBox>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </center>
+   
+   <bottom>
+      <!-- ステータスバー -->
+      <HBox alignment="CENTER_LEFT" styleClass="status-bar" spacing="10.0">
+         <Label fx:id="statusLabel" text="準備完了" style="-fx-text-fill: white;">
+         </Label>
+         <Region HBox.hgrow="ALWAYS" />
+         <ToggleButton fx:id="themeToggle" onAction="#toggleTheme" mnemonicParsing="false" styleClass="button-secondary" text="ダークモード">
+            <graphic>
+               <FontIcon fx:id="themeIcon" iconLiteral="fas-moon" />
+            </graphic>
+         </ToggleButton>
+         <Label fx:id="versionLabel" text="Version 1.0" style="-fx-text-fill: rgba(255,255,255,0.7);" />
+      </HBox>
+   </bottom>
+</BorderPane>

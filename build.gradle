@@ -1,0 +1,258 @@
+import java.awt.MenuShortcut
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+group = 'koto_thing'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+// エンコーディング設定
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+}
+
+javafx {
+    version = '17.0.2'
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+dependencies {
+    // JSON processing
+    implementation 'com.google.code.gson:gson:2.10.1'
+    // Icon library
+    implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
+    implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:12.3.1'
+    // Testing dependencies
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+}
+
+// アプリケーションのメインクラス設定
+application {
+    mainModule = 'kotothing.voicevalidator'
+    mainClass = 'koto_thing.voiceover_validator.VoiceoverValidationApp'
+    applicationDefaultJvmArgs = [
+        '--module-path', 'lib',
+        '--add-modules', 'javafx.controls,javafx.fxml',
+        '-Dfile.encoding=UTF-8'
+    ]
+}
+
+// テスト設定
+test {
+    useJUnitPlatform()
+}
+
+// JavaFX runtime configuration
+run {
+    systemProperty 'file.encoding', 'UTF-8'
+}
+
+// 標準のjarは自モジュールのみを含む
+jar {
+    manifest {
+        attributes 'Main-Class': 'koto_thing.voiceover_validator.VoiceoverValidationApp'
+    }
+}
+
+// --- jpackage 用: 非モジュールJARとステージング ---
+// module-info.class を含まない plain JAR を追加生成
+tasks.register('jarPlain', Jar) {
+    archiveClassifier.set('plain')
+    from(sourceSets.main.output)
+    exclude('module-info.class', '**/module-info.class')
+    manifest {
+        attributes 'Main-Class': 'koto_thing.voiceover_validator.VoiceoverValidationApp'
+    }
+}
+
+// jpackage 入力用の lib ディレクトリを準備
+tasks.register('prepareJpackage', Copy) {
+    dependsOn('installDist', 'jarPlain')
+
+    def installLib = layout.buildDirectory.dir('install/VoiceValidator/lib')
+    def outLib = layout.buildDirectory.dir('jpackage/lib')
+    def modularJarName = tasks.named('jar', Jar).flatMap { it.archiveFileName }
+    def plainJarFile = tasks.named('jarPlain', Jar).flatMap { it.archiveFile }
+
+    from(installLib)
+    into(outLib)
+
+    // 実行時にモジュールJARを除外
+    doFirst {
+        exclude(modularJarName.get())
+    }
+
+    // plain JAR をモジュールJAR名にリネームして配置
+    from(plainJarFile) {
+        rename { String fn -> modularJarName.get() }
+    }
+
+    // Python実行スクリプトも同梱（lib直下に配置）
+    from(project.layout.projectDirectory) {
+        include 'RecognizeAndCompare.py'
+        into ''
+    }
+}
+
+// プロジェクトのバージョンを出力
+tasks.register('printVersion') {
+    doLast { println project.version }
+}
+
+// Gradleが使用しているJDKのjava.homeを出力（jpackage検出のフォールバック用）
+tasks.register('printJavaHome') {
+    doLast { println System.getProperty('java.home') }
+}
+
+// 配布用のZIPファイル作成タスク
+task createDistribution(type: Zip) {
+    archiveBaseName = 'VoiceValidator'
+    archiveVersion = project.version
+    destinationDirectory = file("$buildDir/distributions")
+
+    from(installDist) {
+        into 'VoiceValidator'
+    }
+
+    // Pythonスクリプトとその他のファイルを含める
+    from('RecognizeAndCompare.py') {
+        into 'VoiceValidator/lib'
+    }
+
+    from('requirements.txt') {
+        into 'VoiceValidator'
+    }
+
+    from('README.md') {
+        into 'VoiceValidator'
+    }
+
+    from('CHANGELOG.md') {
+        into 'VoiceValidator'
+    }
+
+    from('start_voice_validator.bat') {
+        into 'VoiceValidator'
+    }
+}
+
+// TAR形式の配布ファイル作成タスク
+task createTarDistribution(type: Tar) {
+    archiveBaseName = 'VoiceValidator'
+    archiveVersion = project.version
+    destinationDirectory = file("$buildDir/distributions")
+    compression = Compression.GZIP
+    archiveExtension = 'tar.gz'
+
+    from(installDist) {
+        into 'VoiceValidator'
+    }
+
+    // Pythonスクリプトとその他のファイルを含める
+    from('RecognizeAndCompare.py') {
+        into 'VoiceValidator/lib'
+    }
+
+    from('requirements.txt') {
+        into 'VoiceValidator'
+    }
+
+    from('README.md') {
+        into 'VoiceValidator'
+    }
+
+    from('CHANGELOG.md') {
+        into 'VoiceValidator'
+    }
+
+    from('start_voice_validator.bat') {
+        into 'VoiceValidator'
+    }
+}
+
+// 配布ファイルに追加ファイルを含める
+distributions {
+    main {
+        contents {
+            from('.') {
+                include 'start_voice_validator.bat'
+                include 'README.md'
+                include 'CHANGELOG.md'
+                include 'requirements.txt'
+            }
+        }
+    }
+}
+
+// 依存関係の設定
+createDistribution.dependsOn installDist
+createTarDistribution.dependsOn installDist
+
+// 簡単にビルドできるタスク
+task buildRelease {
+    dependsOn createDistribution, createTarDistribution
+    group = 'distribution'
+    description = 'Creates both ZIP and TAR.GZ distribution packages'
+}
+
+// チェックサム生成タスク
+task generateChecksums {
+    dependsOn buildRelease
+    group = 'distribution'
+    description = 'Generates SHA-256 checksums for distribution packages'
+    
+    doLast {
+        def distDir = file("$buildDir/distributions")
+        def checksumFile = new File(distDir, "SHA256SUMS.txt")
+        
+        if (checksumFile.exists()) {
+            checksumFile.delete()
+        }
+        
+        distDir.listFiles().findAll { 
+            it.name.startsWith('VoiceValidator-') && (it.name.endsWith('.zip') || it.name.endsWith('.tar.gz'))
+        }.each { file ->
+            println "[INFO] Calculating checksum for ${file.name}..."
+            
+            def hash = java.security.MessageDigest.getInstance("SHA-256")
+            file.eachByte(4096) { bytes, size ->
+                hash.update(bytes, 0, size)
+            }
+            
+            def hashString = hash.digest().collect { 
+                String.format('%02x', it) 
+            }.join('')
+            
+            checksumFile.append("${hashString.toUpperCase()} *${file.name}\n")
+        }
+        
+        println "[INFO] Checksums generated in ${checksumFile.absolutePath}"
+        println "[INFO] Checksum contents:"
+        checksumFile.eachLine { line ->
+            println "  ${line}"
+        }
+    }
+}
