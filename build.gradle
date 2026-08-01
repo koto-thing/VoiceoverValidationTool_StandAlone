@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.beryx.jlink' version '2.25.0'
 }
 
 group = 'koto_thing'
@@ -69,6 +70,7 @@ distributions {
             from('CHANGELOG.md')
             from('requirements.txt')
             from('start_voice_validator.bat')
+            from('start_voice_validator.sh')
         }
     }
 }
@@ -99,3 +101,35 @@ task generateChecksums {
 
 // ビルド時に自動的にチェックサムを生成
 assemble.finalizedBy generateChecksums
+
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'VoiceValidator'
+    }
+    jpackage {
+        if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+            installerType = 'msi'
+            installerOptions += [
+                '--vendor', 'koto_thing',
+                '--description', 'Voice Validation Tool',
+                '--win-dir-chooser',
+                '--win-menu',
+                '--win-shortcut'
+            ]
+        } else if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
+            installerType = 'deb'
+            installerOptions += [
+                '--vendor', 'koto_thing',
+                '--description', 'Voice Validation Tool',
+                '--linux-shortcut',
+                '--linux-menu-group', 'Utility'
+            ]
+        } else {
+            installerOptions += [
+                '--vendor', 'koto_thing',
+                '--description', 'Voice Validation Tool'
+            ]
+        }
+    }
+}
