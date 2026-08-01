@@ -12,6 +12,9 @@ import tempfile
 sr = None  # type: ignore
 whisper = None  # type: ignore
 
+# Whisperモデルのキャッシュ (複数タスク処理時のパフォーマンス改善)
+_whisper_model_cache = {}
+
 
 def calculate_similarity(text1: str, text2: str) -> float:
     """2つのテキストの類似度を計算"""
@@ -79,7 +82,13 @@ def recognize_audio_whisper(audio_path: str, language_code: str, model_name: str
         if whisper is None:
             import whisper as _whisper  # 遅延インポート
             whisper = _whisper
-        model = whisper.load_model(model_name)
+
+        # パフォーマンス最適化: モデルのロードは非常に重いためキャッシュする
+        # これにより複数タスク処理時の処理時間が大幅に短縮される
+        if model_name not in _whisper_model_cache:
+            _whisper_model_cache[model_name] = whisper.load_model(model_name)
+
+        model = _whisper_model_cache[model_name]
         result = model.transcribe(audio_path, language=language_code)
         return result.get("text", "")
     except ImportError:

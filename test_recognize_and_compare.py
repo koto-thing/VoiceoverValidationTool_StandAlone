@@ -102,6 +102,11 @@ class TestRecognizeAndCompare(unittest.TestCase):
     @patch('RecognizeAndCompare.whisper')  # whisperモジュール全体をパッチ
     def test_recognize_audio_whisper_failure(self, mock_whisper):
         """Whisper音声認識の失敗テスト"""
+        # Ensure the model is not cached for the failure test
+        from RecognizeAndCompare import _whisper_model_cache
+        if "base" in _whisper_model_cache:
+            del _whisper_model_cache["base"]
+
         mock_whisper.load_model.side_effect = Exception("Model loading failed")
         
         with patch.dict('sys.modules', {'whisper': mock_whisper}):
