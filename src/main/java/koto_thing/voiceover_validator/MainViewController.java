@@ -946,9 +946,19 @@ public class MainViewController implements Initializable {
         if (scriptCol == -1) 
             return list;
         
+        // パフォーマンス最適化: M(CSV行数) * N(音声ファイル数) の計算量を削減するため、
+        // CSVデータを事前にHashMapへキャッシュする (O(M) + O(N))
+        Map<String, String> scriptMap = new HashMap<>();
+        for (int i = 1; i < csvData.size(); i++) {
+            String[] row = csvData.get(i);
+            if (row.length > 0 && row.length > scriptCol) {
+                scriptMap.put(row[0].trim(), row[scriptCol].trim());
+            }
+        }
+
         for (AudioMapping m : audioMappings) {
             if (!"未選択".equals(m.getCsvId())) {
-                String script = findScriptTextById(m.getCsvId(), scriptCol);
+                String script = scriptMap.get(m.getCsvId());
                 if (script != null) {
                     String audioPath = Paths.get(audioFolderPathField.getText(), m.getFileName()).toString();
                     list.add(new ProcessingTask(m.getCsvId(), audioPath, script));
@@ -957,22 +967,6 @@ public class MainViewController implements Initializable {
         }
         
         return list;
-    }
-
-    /**
-     * 台本のセリフをIDから検索
-     * @param id 検索するID
-     * @param col セリフがある列番号
-     * @return 見つかった場合にテキスト、見つからなければnull
-     */
-    private String findScriptTextById(String id, int col) {
-        for (int i = 1; i < csvData.size(); i++) {
-            String[] row = csvData.get(i);
-            if (row.length > 0 && row[0].trim().equals(id) && row.length > col) 
-                return row[col].trim();
-        }
-        
-        return null;
     }
 
     /**
