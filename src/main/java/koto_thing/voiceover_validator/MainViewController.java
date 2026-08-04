@@ -1081,10 +1081,13 @@ public class MainViewController implements Initializable {
                             BatchResult batch = gson.fromJson(outStr, BatchResult.class);
                             Platform.runLater(() -> {
                                 if (batch != null && batch.results != null) {
+                                    // ⚡ Bolt: Use a temporary list and addAll to prevent O(N) UI re-renders
+                                    List<ValidationResult> newResults = new ArrayList<>();
                                     for (PythonResult res : batch.results) {
                                         String status = res.error != null ? "error" : (res.similarity >= 0.9 ? "success" : "warning");
-                                        results.add(new ValidationResult(res.id, res.similarity, res.script_text, res.recognized_text, status));
+                                        newResults.add(new ValidationResult(res.id, res.similarity, res.script_text, res.recognized_text, status));
                                     }
+                                    results.addAll(newResults);
                                 }
                             });
                             parsedAny = true;
@@ -1101,10 +1104,14 @@ public class MainViewController implements Initializable {
                                 BatchResult batch = gson.fromJson(jsonCandidate, BatchResult.class);
                                 Platform.runLater(() -> {
                                     if (batch != null && batch.results != null) {
+                                        // ⚡ Bolt: Use a temporary list and addAll to prevent O(N) UI re-renders
+                                        List<ValidationResult> newResults = new ArrayList<>();
                                         for (PythonResult res : batch.results) {
                                             String status = res.error != null ? "error" : (res.similarity >= 0.9 ? "success" : "warning");
-                                            results.add(new ValidationResult(res.id, res.similarity, res.script_text, res.recognized_text, status));
+                                            newResults.add(new ValidationResult(res.id, res.similarity, res.script_text, res.recognized_text, status));
                                         }
+                                        results.addAll(newResults);
+
                                         if (!batch.results.isEmpty()) {
                                             String reason = batch.results.get(0).error;
                                             if (reason != null) 
