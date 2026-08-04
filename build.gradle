@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'koto_thing'
-version = '1.0.0'
+version = '1.0.1'
 
 repositories {
     mavenCentral()
@@ -69,6 +69,8 @@ distributions {
             from('README.md')
             from('CHANGELOG.md')
             from('requirements.txt')
+            from('RecognizeAndCompare.py')
+            from('test_python_environment.py')
             from('start_voice_validator.bat')
             from('start_voice_validator.sh')
         }
