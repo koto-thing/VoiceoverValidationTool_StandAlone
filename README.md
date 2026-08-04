@@ -8,19 +8,19 @@
 ## 配布パッケージについて
 
 このアプリケーションは以下の形式で配布されます：
-- **VoiceValidator-1.0.0.zip** - Windows用ZIP形式
-- **VoiceValidator-1.0.0.tar.gz** - Linux/macOS用TAR.GZ形式
+- **VoiceValidator-1.0.1.zip** - Windows用ZIP形式
+- **VoiceValidator-1.0.1.tar** - Linux/macOS用TAR形式
 
 ## インストール方法
 
 ### Windows (ZIP形式)
-1. `VoiceValidator-1.0.0.zip` をダウンロード
+1. `VoiceValidator-1.0.1.zip` をダウンロード
 2. 任意のフォルダに解凍
 3. 解凍したフォルダ内の `VoiceValidator/bin/VoiceValidator.bat` を実行
 
-### Linux/macOS (TAR.GZ形式)
-1. `VoiceValidator-1.0.0.tar.gz` をダウンロード
-2. 解凍: `tar -xzf VoiceValidator-1.0.0.tar.gz`
+### Linux/macOS (TAR形式)
+1. `VoiceValidator-1.0.1.tar` をダウンロード
+2. 解凍: `tar -xf VoiceValidator-1.0.1.tar`
 3. 実行権限を付与: `chmod +x VoiceValidator/bin/VoiceValidator`
 4. 実行: `./VoiceValidator/bin/VoiceValidator`
 

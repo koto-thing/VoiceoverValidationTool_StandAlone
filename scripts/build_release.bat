@@ -40,8 +40,8 @@ if exist "build\distributions\" (
 echo.
 echo [INFO] Release build complete!
 echo [INFO] Files ready for distribution:
-echo   - VoiceValidator-1.0.0.zip (Windows)
-echo   - VoiceValidator-1.0.0.tar (Linux/macOS)
+echo   - VoiceValidator-1.0.1.zip (Windows)
+echo   - VoiceValidator-1.0.1.tar (Linux/macOS)
 echo   - SHA256 checksums included
 echo.
 pause

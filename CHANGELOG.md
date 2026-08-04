@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2026-08-04
+### Added
+- GitHub Actions release pipeline for Windows and Linux packages
+- Native MSI and DEB installers in tagged GitHub Releases
+
+### Changed
+- Release assets are collected before publishing so a single GitHub Release receives every platform package
+- Distribution archives now include the Python recognition and environment-check scripts required at runtime
+- Whisper models are cached during batch processing
+
+### Fixed
+- Application entry point used by packaged builds
+- Missing checksum manifest and cross-platform launcher files in release packages
+
 ## [1.0.0] - 2025-08-27
 ### Added
 - ZIP and TAR distribution packages for cross-platform deployment
