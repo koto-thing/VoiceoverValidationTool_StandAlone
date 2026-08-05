@@ -946,9 +946,23 @@ public class MainViewController implements Initializable {
         if (scriptCol == -1) 
             return list;
         
+        // ⚡ Bolt: Performance optimization
+        // Convert O(n^2) nested loop search to O(n) hash map lookup
+        // We pre-calculate all scripts by ID into a map for fast retrieval
+        Map<String, String> scriptMap = new HashMap<>();
+        for (int i = 1; i < csvData.size(); i++) {
+            String[] row = csvData.get(i);
+            if (row.length > 0 && row.length > scriptCol) {
+                String id = row[0].trim();
+                String text = row[scriptCol].trim();
+                // We keep the first occurrence if duplicates exist, mimicking the old behavior
+                scriptMap.putIfAbsent(id, text);
+            }
+        }
+
         for (AudioMapping m : audioMappings) {
             if (!"未選択".equals(m.getCsvId())) {
-                String script = findScriptTextById(m.getCsvId(), scriptCol);
+                String script = scriptMap.get(m.getCsvId());
                 if (script != null) {
                     String audioPath = Paths.get(audioFolderPathField.getText(), m.getFileName()).toString();
                     list.add(new ProcessingTask(m.getCsvId(), audioPath, script));
@@ -957,22 +971,6 @@ public class MainViewController implements Initializable {
         }
         
         return list;
-    }
-
-    /**
-     * 台本のセリフをIDから検索
-     * @param id 検索するID
-     * @param col セリフがある列番号
-     * @return 見つかった場合にテキスト、見つからなければnull
-     */
-    private String findScriptTextById(String id, int col) {
-        for (int i = 1; i < csvData.size(); i++) {
-            String[] row = csvData.get(i);
-            if (row.length > 0 && row[0].trim().equals(id) && row.length > col) 
-                return row[col].trim();
-        }
-        
-        return null;
     }
 
     /**
