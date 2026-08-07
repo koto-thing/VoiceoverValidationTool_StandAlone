@@ -1,5 +1,3 @@
-# Bolt's Journal
-
-## 2024-05-31 - Expensive Model Loading in Iteration
-**Learning:** Found that `whisper.load_model(model_name)` was being called inside `recognize_audio_whisper` for every single task being processed in a loop. Loading ML models repeatedly per task rather than initializing once per process dramatically slows down batch processing.
-**Action:** Always check if heavy resource loading (like ML models or database connections) can be pulled out of loops or cached globally when processing batches of tasks.
+## 2024-05-24 - O(N^2) Lookup in UI Thread
+**Learning:** The JavaFX UI thread was handling an O(N*M) nested loop operation (`prepareTasks` calling `findScriptTextById`) to map CSV scripts to audio files. In a project bridging a UI orchestration layer and heavy external processing (Python), keeping the UI responsive during prep operations is critical.
+**Action:** When iterating over collections on the UI thread to construct task payloads, always use O(1) structures (like HashMaps) for cross-referencing datasets rather than linear array searches.
